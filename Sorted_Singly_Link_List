@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+
+void insertSorted(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (head == NULL || value < head->data) {
+        newNode->next = head;
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL && temp->next->data < value) {
+            temp = temp->next;
+        }
+        newNode->next = temp->next;
+        temp->next = newNode;
+    }
+    printf("%d inserted in sorted order\n", value);
+}
+
+
+void deleteValue(int value) {
+    if (head == NULL) {
+        printf("List is Empty\n");
+        return;
+    }
+    struct Node* temp = head;
+    if (head->data == value) {
+        head = head->next;
+        printf("%d deleted\n", temp->data);
+        free(temp);
+        return;
+    }
+    while (temp->next != NULL && temp->next->data != value) {
+        temp = temp->next;
+    }
+    if (temp->next == NULL) {
+        printf("Value not found\n");
+    } else {
+        struct Node* delNode = temp->next;
+        temp->next = delNode->next;
+        printf("%d deleted\n", delNode->data);
+        free(delNode);
+    }
+}
+
+
+void display() {
+    if (head == NULL) {
+        printf("List is Empty\n");
+        return;
+    }
+    struct Node* temp = head;
+    printf("Sorted Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+
+int main() {
+    int choice, value;
+    do {
+        printf("\n=== Sorted Singly Linked List Menu ===\n");
+        printf("1. Insert\n");
+        printf("2. Delete\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                insertSorted(value);
+                break;
+            case 2:
+                printf("Enter value to delete: ");
+                scanf("%d", &value);
+                deleteValue(value);
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice, try again!\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}
